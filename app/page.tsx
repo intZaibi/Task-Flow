@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { socket } from "../socket";
+import { socket } from "@/socket";
+import Board from "@/components/layout/Board";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -37,8 +38,13 @@ export default function Home() {
 
   return (
     <div>
-      <p>Status: { isConnected ? "connected" : "disconnected" }</p>
-      <p>Transport: { transport }</p>
+      <div>
+        <p>Status: { isConnected ? "connected" : "disconnected" }</p>
+        <p>Transport: { transport }</p>
+      </div>
+      <div>
+        <Board/>
+      </div>
     </div>
   );
 }
