@@ -1,8 +1,6 @@
-"use client";
-
 // import { useEffect, useState } from "react";
 // import { socket } from "@/socket";
-import Board from "@/components/layout/Board";
+import DynamicComponent from "@/components/layout/DynamicComponent";
 import Header from "@/components/layout/Header";
 
 export default function Home() {
@@ -40,8 +38,8 @@ export default function Home() {
   return (
     <div>
       <Header/>
-      <div>
-        {/* <Board /> */}
+      <div className=" px-40">
+        <DynamicComponent />
       </div>
     </div>
   );

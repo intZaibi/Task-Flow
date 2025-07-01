@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Task, Column as ColumnType } from '@/types/types.ts';
 import { Column } from './Columns';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { socket } from '@/socket';
 
 const COLUMNS: ColumnType[] = [
   { id: 'TODO', title: 'To Do' },
@@ -12,26 +13,22 @@ const COLUMNS: ColumnType[] = [
 const INITIAL_TASKS: Task[] = [
   {
     id: '1',
-    title: 'Research Project',
-    description: 'Gather requirements and create initial documentation',
+    text: 'Research Project',
     status: 'TODO',
   },
   {
     id: '2',
-    title: 'Design System',
-    description: 'Create component library and design tokens',
+    text: 'Design System',
     status: 'TODO',
   },
   {
     id: '3',
-    title: 'API Integration',
-    description: 'Implement REST API endpoints',
+    text: 'API Integration',
     status: 'IN_PROGRESS',
   },
   {
     id: '4',
-    title: 'Testing',
-    description: 'Write unit tests for core functionality',
+    text: 'Testing',
     status: 'DONE',
   },
 ];
@@ -55,13 +52,14 @@ export default function App() {
               status: newStatus,
             }
           : task,
-      ),
-    );
+      ));
+
+    socket.emit('updated', tasks)
   }
 
   return (
-    <div className="p-4">
-      <div className="flex gap-8">
+    <div className="p-4 w-full">
+      <div className="flex gap-8 w-full justify-center">
         <DndContext onDragEnd={handleDragEnd}>
           {COLUMNS.map((column) => {
             return (
