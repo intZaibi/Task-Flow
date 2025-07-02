@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Task, Column as ColumnType } from '@/types/types.ts';
 import { Column } from './Columns';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
@@ -34,7 +34,32 @@ const INITIAL_TASKS: Task[] = [
 ];
 
 export default function App() {
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  // setup socket logic
+  useEffect(() => {
+    const handleInitialTasks = (initialTasks: Task[]) => {
+      console.log(initialTasks)
+      setTasks(initialTasks);
+    };
+
+    const handleTasksUpdated = (updatedTasks: Task[]) => {
+      setTasks(updatedTasks);
+    };
+
+    // when user connect, get initialTasks
+    socket.on('initialTasks', handleInitialTasks);
+
+    // When others update tasks
+    socket.on('tasksUpdated', handleTasksUpdated);
+
+    // clean up only the listeners
+    return () => {
+      socket.off('initialTasks', handleInitialTasks);
+      socket.off('tasksUpdated', handleTasksUpdated);
+    };
+  }, []);
+
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -44,17 +69,14 @@ export default function App() {
     const taskId = active.id as string;
     const newStatus = over.id as Task['status'];
 
-    setTasks(() =>
-      tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              status: newStatus,
-            }
-          : task,
-      ));
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId
+        ? { ...task, status: newStatus }
+        : task,
+    );
 
-    socket.emit('updated', tasks)
+    setTasks(updatedTasks);
+    socket.emit('updateTasks', updatedTasks);
   }
 
   return (

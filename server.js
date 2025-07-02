@@ -9,14 +9,48 @@ const port = process.env.PORT || 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
+let tasks = [
+  {
+    id: '1',
+    text: 'Research Project',
+    status: 'TODO',
+  },
+  {
+    id: '2',
+    text: 'Design System',
+    status: 'TODO',
+  },
+  {
+    id: '3',
+    text: 'API Integration',
+    status: 'IN_PROGRESS',
+  },
+  {
+    id: '4',
+    text: 'Testing',
+    status: 'DONE',
+  },
+];
+
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    console.log('A new socket is connected', socket.id)
+    console.log('A new socket is connected', socket.id);
+
+    // Send current board state to the new client
+    socket.emit('initialTasks', tasks);
+    
+    // When a user updates the board
+    socket.on('updateTasks', (newTasks) => {
+      console.log('tasks updated')
+      tasks = newTasks;
+      socket.broadcast.emit('tasksUpdated', newTasks); // send to others
+    });
   });
+
 
   httpServer
     .once("error", (err) => {
