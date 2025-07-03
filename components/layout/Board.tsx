@@ -1,10 +1,9 @@
 import { useContext, useEffect } from 'react';
 import type { Task, Column as ColumnType } from '@/types/types.ts';
 import { Column } from './Columns';
-import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { socket } from '@/components/hooks/socket';
 import { Context } from '@/app/context/Context';
-import { DroppableContainersMap } from '@dnd-kit/core/dist/store/constructors';
 
 const COLUMNS: ColumnType[] = [
   { id: 'TODO', title: 'To Do' },
@@ -20,37 +19,19 @@ export default function App() {
   useSensor(MouseSensor)
 );
 
-  const handleInitialTasks = (initialTasks: Task[]) => {
-    console.log(initialTasks)
-    setTasks(initialTasks);
-  };
-
   const handleTasksUpdated = (updatedTasks: Task[]) => {
-    console.log('updatedTasks:', updatedTasks)
     setTasks(updatedTasks);
   };
-  
   // setup socket logic
   useEffect(() => {
 
-    socket.on('initialTasks', (data) => {
-      console.log('Received initialTasks:', data.length);
-    });
+  socket.on('tasksUpdated', handleTasksUpdated);
 
-    // when user connect, get initialTasks
-    socket.on('initialTasks', handleInitialTasks);
-
-    // When others update tasks
-    socket.on('tasksUpdated', handleTasksUpdated);
-
-    // clean up only the listeners
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('initialTasks', handleInitialTasks);
-      socket.off('tasksUpdated', handleTasksUpdated);
-    };
-  }, []);
+  return () => {
+    socket.off('tasksUpdated', handleTasksUpdated);
+    socket.off('connect');
+  };
+}, []);
 
 
   function handleDragEnd(event: DragEndEvent) {
@@ -75,7 +56,7 @@ export default function App() {
     <div className="p-4 w-full">
       <div className="flex gap-8 w-full justify-center">
         <DndContext onDragStart={(e) => console.log('Drag started', e)} sensors={sensors} onDragEnd={handleDragEnd}>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-8 w-full justify-center">
             {COLUMNS.map((column) => (
               <Column
                 key={column.id}

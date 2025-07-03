@@ -41,7 +41,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-1 justify-end gap-8">
-        <label className="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+        <label className="hidden sm:flex flex-col min-w-40 !h-10 max-w-64">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
             <div
               className="text-[#a6b3a2] flex border-none bg-[#2e352c] items-center justify-center pl-4 rounded-l-xl border-r-0"
@@ -61,7 +61,7 @@ export default function Header() {
             </div>
             <input
               placeholder="Search"
-              className="hidden form-input md:flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-[#2e352c] focus:border-none h-full placeholder:text-[#a6b3a2] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+              className="hidden form-input sm:flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-[#2e352c] focus:border-none h-full placeholder:text-[#a6b3a2] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
               defaultValue=""
             />
           </div>

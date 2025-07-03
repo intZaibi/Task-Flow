@@ -38,17 +38,15 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    console.log('A new socket is connected', socket.id);
-    
-    // Send current board state to the new client
-    socket.emit('initialTasks', tasks);
-    
-    socket.on('updateTasks', (newTasks) => {
-      console.log('tasks updated')
-      tasks = newTasks;
-      socket.broadcast.emit('tasksUpdated', newTasks); // send to others
-    });
+
+  socket.emit('initialTasks', tasks);
+
+  socket.on('updateTasks', (newTasks) => {
+    tasks = newTasks;
+    io.emit('tasksUpdated', newTasks);
   });
+});
+
 
 
   httpServer

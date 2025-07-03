@@ -1,7 +1,8 @@
 'use client';
 
+import { socket } from '@/components/hooks/socket';
 import { Task } from '@/types/types';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 const INITIAL_TASKS: Task[] = [
   {
@@ -36,17 +37,31 @@ export const Context = createContext<{
 
 export const ContextProvider = ({ children }: { children : React.ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
-  
-  // useLayoutEffect(() => {
-  //   const storedCartItems = localStorage.getItem('cart');
-  //   if (storedCartItems) {
-  //     setCartItems(JSON.parse(storedCartItems));
-  //   }
-  // }, []);
 
-  // useLayoutEffect(() => {
-  //     localStorage.setItem('cart', JSON.stringify(cartItems));
-  // }, [cartItems]);
+  useEffect(() => {
+    const handleInitialTasks = (initialTasks: Task[]) => {
+      setTasks(initialTasks);
+    };
+
+    const handleConnect = () => {
+      console.log('Connected to socket:', socket.id);
+    };
+
+    const handleConnectError = (err: any) => {
+      console.error('Socket connection error:', err);
+    };
+
+    socket.on('initialTasks', handleInitialTasks);
+    socket.on('connect', handleConnect);
+    socket.on('connect_error', handleConnectError);
+
+    // Cleanup listeners on unmount
+    return () => {
+      socket.off('initialTasks', handleInitialTasks);
+      socket.off('connect', handleConnect);
+      socket.off('connect_error', handleConnectError);
+    };
+  }, []);
 
   return (
     <Context.Provider
