@@ -26,7 +26,7 @@ const INITIAL_TASKS: Task[] = [
   },
 ];
 
-export const CartContext = createContext<{
+export const Context = createContext<{
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }>({
@@ -34,7 +34,7 @@ export const CartContext = createContext<{
   setTasks: () => [],
 });
 
-export const CartProvider = ({ children }: { children : React.ReactNode }) => {
+export const ContextProvider = ({ children }: { children : React.ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   
   // useLayoutEffect(() => {
@@ -49,13 +49,13 @@ export const CartProvider = ({ children }: { children : React.ReactNode }) => {
   // }, [cartItems]);
 
   return (
-    <CartContext.Provider
+    <Context.Provider
       value={{
         tasks,
         setTasks
       }}
     >
       {children}
-    </CartContext.Provider>
+    </Context.Provider>
   );
 };

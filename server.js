@@ -39,11 +39,10 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log('A new socket is connected', socket.id);
-
+    
     // Send current board state to the new client
     socket.emit('initialTasks', tasks);
     
-    // When a user updates the board
     socket.on('updateTasks', (newTasks) => {
       console.log('tasks updated')
       tasks = newTasks;

@@ -13,6 +13,7 @@ export function TaskCard({ task }: TaskCardProps) {
   const style = transform
     ? {
         transform: `translate(${transform.x}px, ${transform.y}px)`,
+        'touchAction': 'none'
       }
     : undefined;
 

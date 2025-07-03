@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import type { Task, Column as ColumnType } from '@/types/types.ts';
 import { Column } from './Columns';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { socket } from '@/socket';
+import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { socket } from '@/components/hooks/socket';
+import { Context } from '@/app/context/Context';
+import { DroppableContainersMap } from '@dnd-kit/core/dist/store/constructors';
 
 const COLUMNS: ColumnType[] = [
   { id: 'TODO', title: 'To Do' },
@@ -10,42 +12,30 @@ const COLUMNS: ColumnType[] = [
   { id: 'DONE', title: 'Done' },
 ];
 
-const INITIAL_TASKS: Task[] = [
-  {
-    id: '1',
-    text: 'Research Project',
-    status: 'TODO',
-  },
-  {
-    id: '2',
-    text: 'Design System',
-    status: 'TODO',
-  },
-  {
-    id: '3',
-    text: 'API Integration',
-    status: 'IN_PROGRESS',
-  },
-  {
-    id: '4',
-    text: 'Testing',
-    status: 'DONE',
-  },
-];
-
 export default function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const {tasks, setTasks} = useContext(Context);
 
+  const sensors = useSensors(
+  useSensor(TouchSensor),
+  useSensor(MouseSensor)
+);
+
+  const handleInitialTasks = (initialTasks: Task[]) => {
+    console.log(initialTasks)
+    setTasks(initialTasks);
+  };
+
+  const handleTasksUpdated = (updatedTasks: Task[]) => {
+    console.log('updatedTasks:', updatedTasks)
+    setTasks(updatedTasks);
+  };
+  
   // setup socket logic
   useEffect(() => {
-    const handleInitialTasks = (initialTasks: Task[]) => {
-      console.log(initialTasks)
-      setTasks(initialTasks);
-    };
 
-    const handleTasksUpdated = (updatedTasks: Task[]) => {
-      setTasks(updatedTasks);
-    };
+    socket.on('initialTasks', (data) => {
+      console.log('Received initialTasks:', data.length);
+    });
 
     // when user connect, get initialTasks
     socket.on('initialTasks', handleInitialTasks);
@@ -55,6 +45,8 @@ export default function App() {
 
     // clean up only the listeners
     return () => {
+      socket.off('connect');
+      socket.off('disconnect');
       socket.off('initialTasks', handleInitialTasks);
       socket.off('tasksUpdated', handleTasksUpdated);
     };
@@ -82,16 +74,16 @@ export default function App() {
   return (
     <div className="p-4 w-full">
       <div className="flex gap-8 w-full justify-center">
-        <DndContext onDragEnd={handleDragEnd}>
-          {COLUMNS.map((column) => {
-            return (
+        <DndContext onDragStart={(e) => console.log('Drag started', e)} sensors={sensors} onDragEnd={handleDragEnd}>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full justify-center">
+            {COLUMNS.map((column) => (
               <Column
                 key={column.id}
                 column={column}
                 tasks={tasks.filter((task) => task.status === column.id)}
               />
-            );
-          })}
+            ))}
+          </div>
         </DndContext>
       </div>
     </div>

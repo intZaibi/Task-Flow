@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div>
       <Header/>
-      <div className=" px-40">
+      <div className="md:px-40 px-5">
         <DynamicComponent />
       </div>
     </div>

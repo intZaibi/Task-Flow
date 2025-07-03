@@ -21,23 +21,23 @@ export default function Header() {
               />
             </svg>
           </div>
-          <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+          <h2 className="cursor-default text-white text-lg font-bold leading-tight tracking-[-0.015em]">
             TaskFlow
           </h2>
         </div>
         <div className="flex items-center gap-9">
-          <a className="text-white text-sm font-medium leading-normal" href="#">
+          <span className="cursor-default text-white text-sm font-medium leading-normal">
             Home
-          </a>
-          <a className="text-white text-sm font-medium leading-normal" href="#">
+          </span>
+          <span className="cursor-default text-white text-sm font-medium leading-normal">
             Boards
-          </a>
-          <a className="text-white text-sm font-medium leading-normal" href="#">
+          </span>
+          <span className="cursor-default text-white text-sm font-medium leading-normal">
             Templates
-          </a>
-          <a className="text-white text-sm font-medium leading-normal" href="#">
+          </span>
+          <span className="cursor-default text-white text-sm font-medium leading-normal">
             Create
-          </a>
+          </span>
         </div>
       </div>
       <div className="flex flex-1 justify-end gap-8">
@@ -66,7 +66,7 @@ export default function Header() {
             />
           </div>
         </label>
-        <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-[#2e352c] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+        <button className="cursor-default flex max-w-[480px] items-center justify-center overflow-hidden rounded-full h-10 bg-[#2e352c] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
           <div
             className="text-white"
             data-icon="Bell"
