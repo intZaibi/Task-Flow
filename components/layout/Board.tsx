@@ -15,8 +15,15 @@ export default function App() {
   const {tasks, setTasks} = useContext(Context);
 
   const sensors = useSensors(
-  useSensor(TouchSensor),
-  useSensor(MouseSensor)
+  useSensor(TouchSensor, {activationConstraint: {
+    delay: 200, tolerance: 5
+  }
+  }),
+
+  useSensor(MouseSensor, {activationConstraint: {
+    delay: 200, tolerance: 5
+  }
+  })
 );
 
   const handleTasksUpdated = (updatedTasks: Task[]) => {

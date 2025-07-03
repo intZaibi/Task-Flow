@@ -42,8 +42,8 @@ app.prepare().then(() => {
   socket.emit('initialTasks', tasks);
 
   socket.on('updateTasks', (newTasks) => {
-    tasks = newTasks;
-    io.emit('tasksUpdated', newTasks);
+      tasks = newTasks;
+      io.emit('tasksUpdated', tasks);
   });
 });
 

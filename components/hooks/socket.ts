@@ -12,8 +12,16 @@ socket.on("connect", () => {
   console.log("Connected to server ✅");
 });
 
-socket.on("disconnect", () => {
-  console.log("sever disconnected ❌");
+socket.on('connect_error', (err) => {
+  console.error('Connection failed:', err.message);
+});
+
+socket.on('reconnect', (attempt) => {
+  console.log('Reconnected on attempt', attempt);
+});
+
+socket.on('disconnect', (reason) => {
+  console.warn('Disconnected:', reason);
 });
 
 

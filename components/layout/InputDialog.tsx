@@ -8,12 +8,13 @@ import { socket } from '@/components/hooks/socket';
 type InputDialogPropsType = {
   isOpen: boolean;
   closeDialog: () => void;
+  isEditting?: {bool: boolean, task?: Task}
 };
 
-export default function InputDialog({ isOpen, closeDialog }: InputDialogPropsType) {
+export default function InputDialog({ isOpen, closeDialog, isEditting = { bool:false } }: InputDialogPropsType) {
   const { tasks, setTasks } = useContext(Context);
 
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(isEditting.bool? isEditting.task?.text : '');
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function InputDialog({ isOpen, closeDialog }: InputDialogPropsTyp
   }, [isOpen, inputText]);
 
   function handleAddTask() {
-    const trimmedText = inputText.trim();
+    const trimmedText = inputText?.trim();
     if (!trimmedText) return;
 
     const newTask: Task = {
@@ -58,6 +59,25 @@ export default function InputDialog({ isOpen, closeDialog }: InputDialogPropsTyp
     setInputText('');
     closeDialog();
   };
+
+  function handleEditTask(task:Task|undefined) {
+    if (isEditting.bool && task) {
+      const trimmedText = inputText?.trim();
+      if (!trimmedText) return;
+
+      const edittedTask: Task = {
+        ...task,
+        text: trimmedText
+      };
+
+      const updatedTasks = [...tasks.filter((task)=>task.id!==edittedTask.id), edittedTask];
+      setTasks(updatedTasks);
+      socket.emit('updateTasks', updatedTasks);
+
+      setInputText('');
+      closeDialog();
+    }
+  }
 
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -100,13 +120,23 @@ export default function InputDialog({ isOpen, closeDialog }: InputDialogPropsTyp
           >
             Close
           </button>
-          <button
-            type="button"
-            onClick={handleAddTask}
-            className="rounded-md cursor-pointer bg-gray-200 text-black hover:bg-gray-300 h-10 px-6 py-2 text-sm"
-          >
-            Add
-          </button>
+          {isEditting.bool ? 
+            <button
+              type="button"
+              onClick={()=>handleEditTask(isEditting.task)}
+              className="rounded-md cursor-pointer bg-gray-200 text-black hover:bg-gray-300 h-10 px-6 py-2 text-sm"
+            >
+              Save
+            </button>
+            :
+            <button
+              type="button"
+              onClick={handleAddTask}
+              className="rounded-md cursor-pointer bg-gray-200 text-black hover:bg-gray-300 h-10 px-6 py-2 text-sm"
+            >
+              Add
+            </button>
+          }
         </div>
 
         {/* Close (X) */}
