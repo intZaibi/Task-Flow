@@ -57,7 +57,7 @@ server.js
 | Simple backend vs DB    | Used in-memory storage for MVP simplicity                      |
 | Vercel vs manual server | Not using Vercel (no socket support), opting for custom host   |
 | drag-and-drop lib       | `dnd-kit` chosen over `react-beautiful-dnd` for sensor support |
-| Auth                    | Skipped for simplicity, can be added via NextAuth.js           |
+| Auth                    | Next.js api routes don't support custom WebSocket servers well, so we used a custom Node.js server file to configure Socket.IO. |
 
 ---
 
