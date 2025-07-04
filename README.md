@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 Real-Time Collaborative Task Board
 
-## Getting Started
+A Trello-style task management board built with **Next.js**, **Socket.IO**, and **dnd-kit**, supporting real-time collaboration and drag-and-drop tasks across columns.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 📦 Drag and drop tasks between columns
+- ↺ Real-time sync via WebSockets (Socket.IO)
+- 📝 Edit & delete task support (in progress)
+- 🧹 Modular & component-based architecture
+- ♻️ Rollback state on failed sync
+- ⚡ Error handling & reconnection support
+
+---
+
+## 🛡️ Architecture
+
+### 💻 Frontend
+
+- **Framework:** Next.js (App Router)
+- **State:** React Context API
+- **Drag & Drop:** dnd-kit (Touch + Mouse sensors)
+- **Real-time:** Socket.IO-client
+
+### 📧 Backend
+
+- **Server:** Custom Node.js + Socket.IO server (within Next.js)
+- **Transport:** WebSocket
+- **Storage:** In-memory (can be replaced with Redis/DB)
+
+```txt
+/app
+  ├── layout.tsx
+  ├── page.tsx
+/components
+  /hooks
+    └── socket.ts
+  /layout
+    ├── TaskCard.tsx
+    ├── Column.tsx
+    ├── Board.tsx
+/types
+  └── types.ts
+/context
+  └── Context.tsx
+server.js
+```
+
+---
+
+## ⚖️ Design Trade-offs
+
+| Trade-off               | Decision                                                       |
+| ----------------------- | -------------------------------------------------------------- |
+| Simple backend vs DB    | Used in-memory storage for MVP simplicity                      |
+| Vercel vs manual server | Not using Vercel (no socket support), opting for custom host   |
+| drag-and-drop lib       | `dnd-kit` chosen over `react-beautiful-dnd` for sensor support |
+| Auth                    | Skipped for simplicity, can be added via NextAuth.js           |
+
+---
+
+## 🛠️ Setup
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/intZaibi/Task-Flow.git
+cd Task-Flow-main
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Open app
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Navigate to `http://localhost:3000`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📸 Demo Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+*Coming soon*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🙇‍♂️ Author
 
-## Deploy on Vercel
+**Muhammad Shahzaib Ali**\
+MERN Stack Developer | Real-time Systems | UI/UX
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+
+MIT – Free to use, modify, distribute.
